@@ -2,22 +2,24 @@
 #include <EEPROM.h>
 
 // --- WiFi Configuration ---
-const char* ssid = "YOUR_WIFI_SSID";         // Replace with your WiFi network SSID
-const char* password = "YOUR_WIFI_PASSWORD"; // Replace with your WiFi password
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
 
 // --- pH Sensor Configuration ---
-const int pH_sensor_pin = A0;       // Analog pin for pH sensor
-const float calibration_voltage_7 = 2.05; // Voltage at pH 7.0 
-const float calibration_voltage_4 = 1.65; // Voltage at pH 4.0 
+const int pH_sensor_pin = A0;
+const float calibration_voltage_8_5 = 2.15; // Example voltage at pH 8.5 (replace with your value)
+const float calibration_voltage_6 = 1.75;   // Example voltage at pH 6   (replace with your value)
+float calibration_voltage_7;
+float calibration_voltage_4;
 
 // --- Solenoid Valve Configuration ---
-const int base_valve_pin = D2;     // Digital pin for base solenoid valve
-const int acid_valve_pin = D3;     // Digital pin for acid solenoid valve
-const unsigned long valve_activation_time = 2000; // Milliseconds to activate valve
+const int base_valve_pin = D2;
+const int acid_valve_pin = D3;
+const unsigned long valve_activation_time = 2000;
 
 // --- pH Target Range Configuration ---
-float target_pH_low;
-float target_pH_high;
+float target_pH_low = 6;
+float target_pH_high = 8.5;
 
 // --- EEPROM Configuration ---
 const int EEPROM_SIZE = 128;
@@ -26,7 +28,7 @@ const int PH_HIGH_ADDR = 4;
 
 // --- Global Variables ---
 unsigned long last_pH_read_time = 0;
-const unsigned long pH_read_interval = 5000; // Read pH every 5 seconds
+const unsigned long pH_read_interval = 5000;
 
 unsigned long last_valve_activation_time = 0;
 bool base_valve_active = false;
@@ -40,6 +42,7 @@ void load_pH_range();
 void handle_serial_input();
 void connect_wifi();
 void print_pH_range();
+void calculate_calibration_voltages();
 
 void setup() {
   Serial.begin(115200);
@@ -47,11 +50,12 @@ void setup() {
 
   pinMode(base_valve_pin, OUTPUT);
   pinMode(acid_valve_pin, OUTPUT);
-  digitalWrite(base_valve_pin, LOW);  // Normally closed
-  digitalWrite(acid_valve_pin, LOW);  // Normally closed
+  digitalWrite(base_valve_pin, LOW);
+  digitalWrite(acid_valve_pin, LOW);
 
   EEPROM.begin(EEPROM_SIZE);
   load_pH_range();
+  calculate_calibration_voltages(); // Calculate calibration voltages
   print_pH_range();
 
   connect_wifi();
@@ -82,7 +86,7 @@ void loop() {
     Serial.println("Acid valve deactivated.");
   }
 
-  delay(10); // Small delay to prevent busy-waiting
+  delay(10);
 }
 
 void connect_wifi() {
@@ -101,7 +105,7 @@ void connect_wifi() {
 
 float read_pH() {
   int analog_value = analogRead(pH_sensor_pin);
-  float voltage = analog_value / 1023.0 * 3.3; // Assuming ESP8266 ADC range is 0-3.3V
+  float voltage = analog_value / 1023.0 * 3.3;
 
   // Linear interpolation for pH calculation
   float pH = 7.0 - (voltage - calibration_voltage_7) * (7.0 - 4.0) / (calibration_voltage_7 - calibration_voltage_4);
@@ -175,4 +179,13 @@ void print_pH_range() {
   Serial.print(target_pH_low);
   Serial.print(" to ");
   Serial.println(target_pH_high);
+}
+
+void calculate_calibration_voltages() {
+  calibration_voltage_7 = calibration_voltage_6 + (calibration_voltage_8_5 - calibration_voltage_6) / 2.5;
+  calibration_voltage_4 = calibration_voltage_6 - 0.8 * (calibration_voltage_8_5 - calibration_voltage_6);
+  Serial.print("Calibration Voltage at pH 7: ");
+  Serial.println(calibration_voltage_7);
+  Serial.print("Calibration Voltage at pH 4: ");
+  Serial.println(calibration_voltage_4);
 }
