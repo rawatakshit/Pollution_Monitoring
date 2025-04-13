@@ -7,8 +7,8 @@ const char* password = "YOUR_WIFI_PASSWORD";
 
 // --- pH Sensor Configuration ---
 const int pH_sensor_pin = A0;
-const float calibration_voltage_8_5 = 2.15; // Example voltage at pH 8.5 (replace with your value)
-const float calibration_voltage_6 = 1.75;   // Example voltage at pH 6   (replace with your value)
+const float calibration_voltage_8_5 = 2.15; // Example voltage at pH 8.5 
+const float calibration_voltage_6 = 1.75;   // Example voltage at pH 6 
 float calibration_voltage_7;
 float calibration_voltage_4;
 
