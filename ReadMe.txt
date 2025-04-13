@@ -1,7 +1,8 @@
 ﻿Pollution Monitoring Project
 
 Overview
-This project aims to monitor pollution levels using Unmanned Ground Vehicles (UGVs), Unmanned Aerial Vehicles (UAVs), and pH monitoring systems. The collected data is processed to generate insights and predictions regarding air quality and water pH levels.
+This project aims to monitor pollution levels using Unmanned Ground Vehicles (UGVs), Unmanned Aerial Vehicles (UAVs),
+and pH monitoring systems. The collected data is processed to generate insights and predictions regarding air quality and water pH levels.
 
 File Descriptions
 
