@@ -7,8 +7,8 @@ const char* password = "YOUR_WIFI_PASSWORD"; // Replace with your WiFi password
 
 // --- pH Sensor Configuration ---
 const int pH_sensor_pin = A0;       // Analog pin for pH sensor
-const float calibration_voltage_7 = 2.05; // Voltage at pH 7.0 (adjust based on your sensor)
-const float calibration_voltage_4 = 1.65; // Voltage at pH 4.0 (adjust based on your sensor)
+const float calibration_voltage_7 = 2.05; // Voltage at pH 7.0 
+const float calibration_voltage_4 = 1.65; // Voltage at pH 4.0 
 
 // --- Solenoid Valve Configuration ---
 const int base_valve_pin = D2;     // Digital pin for base solenoid valve
